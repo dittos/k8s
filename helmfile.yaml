@@ -1,0 +1,34 @@
+environments:
+  default:
+    values:
+      - env.yaml
+
+repositories:
+- name: jetstack
+  url: https://charts.jetstack.io
+- name: keel-charts
+  url: https://charts.keel.sh
+
+releases:
+- name: nginx-ingress
+  namespace: nginx-ingress
+  chart: stable/nginx-ingress
+  values:
+  - nginx-ingress/values.yaml
+
+- name: cert-manager
+  namespace: cert-manager
+  chart: jetstack/cert-manager
+  version: v0.8.1
+
+- name: keel
+  namespace: kube-system
+  chart: keel-charts/keel
+  values:
+  - keel/values.yaml.gotmpl
+
+- name: ttrss
+  namespace: default
+  chart: ./external/tt-rss-docker/helm-charts/tt-rss
+  values:
+  - ttrss/values.yaml.gotmpl
