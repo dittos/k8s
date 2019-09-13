@@ -5,16 +5,19 @@ database:
   type: "pgsql"
 
   ## Database host
-  host: "10.42.0.1"
+  host: "postgres-postgresql.default"
   
   ## Database user
-  user: "ttrss"
+  user: "postgres"
 
   ## Database name
   name: "ttrss"
 
   ## Database password
-  password: "{{ .Environment.Values.ttrss.database.password }}"
+  password: ""
+
+  existingSecret: "postgres-postgresql"
+  existingSecretKey: "postgresql-password"
 
   ## Database port
   port: "5432"

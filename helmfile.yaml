@@ -27,6 +27,12 @@ releases:
   values:
   - keel/values.yaml.gotmpl
 
+- name: postgres
+  namespace: default
+  chart: stable/postgresql
+  values:
+  - postgres/values.yaml.gotmpl
+
 - name: ttrss
   namespace: default
   chart: ./external/tt-rss-docker/helm-charts/tt-rss
