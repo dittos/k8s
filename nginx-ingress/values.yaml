@@ -205,7 +205,7 @@ controller:
     annotations: {}
     labels: {}
     omitClusterIP: false
-    clusterIP: ""
+    clusterIP: "10.43.119.107"
 
     ## List of IP addresses at which the controller services are available
     ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
@@ -294,7 +294,7 @@ controller:
     service:
       annotations: {}
       omitClusterIP: false
-      clusterIP: "10.43.119.107"
+      clusterIP: ""
 
       ## List of IP addresses at which the stats service is available
       ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
