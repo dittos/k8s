@@ -19,7 +19,7 @@ releases:
 - name: cert-manager
   namespace: cert-manager
   chart: jetstack/cert-manager
-  version: v0.8.1
+  version: v0.12.0
 
 - name: keel
   namespace: kube-system

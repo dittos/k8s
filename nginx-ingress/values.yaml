@@ -294,7 +294,7 @@ controller:
     service:
       annotations: {}
       omitClusterIP: false
-      clusterIP: ""
+      clusterIP: "10.43.119.107"
 
       ## List of IP addresses at which the stats service is available
       ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
@@ -423,7 +423,7 @@ defaultBackend:
   service:
     annotations: {}
     omitClusterIP: false
-    clusterIP: ""
+    clusterIP: "10.43.132.153"
 
     ## List of IP addresses at which the default backend service is available
     ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
