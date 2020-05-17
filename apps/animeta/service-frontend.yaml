@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: animeta-frontend
+spec:
+  selector:
+    app: animeta-frontend
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000

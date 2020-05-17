@@ -1,0 +1,13 @@
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+animeta.security.secret-key=
+animeta.security.session-cookie-domain=
+animeta.media.base_url=
+animeta.media.root_location=
+spring.cloud.gcp.project-id=
+spring.cloud.gcp.credentials.location=file:/app/secret/google-credentials.json
+spring.social.twitter.app-id=
+spring.social.twitter.app-secret=
+sentry.dsn=
+animeta.backup.root_location=

@@ -1,0 +1,27 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: animeta-cronjob-build-index
+spec:
+  # minute hour dayOfMonth month dayOfWeek (should be UTC!)
+  schedule: "*/5 * * * *" # every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: call
+              image: appropriate/curl
+              args:
+                - '-XPOST'
+                - 'http://animeta-backend.default:8080/admin/tasks/buildIndex'
+                - '-u'
+                - 'admin:$(INTERNAL_PASSWORD)'
+              env:
+                - name: INTERNAL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: animeta
+                      key: 'animeta.security.internal-password'

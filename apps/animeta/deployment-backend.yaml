@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: animeta-backend
+  labels:
+    app: animeta-backend
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: animeta-backend
+  template:
+    metadata:
+      labels:
+        app: animeta-backend
+    spec:
+      containers:
+      - name: backend
+        image: sapzilorg/animeta-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: file:/app/secret/backend-config.properties
+        - name: ANIMETA_SECURITY_INTERNAL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: animeta
+              key: 'animeta.security.internal-password'
+        resources:
+          limits:
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 40
+        volumeMounts:
+        - mountPath: /app/secret
+          name: secret
+      volumes:
+      - name: secret
+        secret:
+          secretName: animeta

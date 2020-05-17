@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    certmanager.k8s.io/acme-challenge-type: http01
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+  name: animeta
+spec:
+  rules:
+  - host: animeta.net
+    http:
+      paths:
+      - backend:
+          serviceName: animeta-frontend
+          servicePort: 3000
+        path: /
+  tls:
+  - hosts:
+    - animeta.net
+    - www.animeta.net
+    secretName: animeta-tls

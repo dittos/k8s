@@ -1,15 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-generatorOptions:
-  disableNameSuffixHash: true
-
 secretGenerator:
   - name: animeta
     type: Opaque
     env: secrets.env
     files:
       - google-credentials.json
+      - backend-config.properties
+      - frontend-config.json
+
+resources:
+  - deployment-backend.yaml
+  - service-backend.yaml
+  - deployment-frontend.yaml
+  - service-frontend.yaml
+  - ingress.yaml
+  - cronjob.yaml
 
 # namespace to deploy all Resources to
 namespace: default

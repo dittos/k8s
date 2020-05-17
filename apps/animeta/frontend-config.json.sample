@@ -1,0 +1,11 @@
+{
+    "backend": {
+        "baseUrl": "http://animeta-backend:8080",
+        "remote": false
+    },
+    "sentryDsn": "",
+    "daumAPIKey": "",
+    "assetBase": "",
+    "staticUrl": "",
+    "kakaoApiKey": ""
+}
