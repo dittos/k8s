@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/acme-challenge-type: http01
+    cert-manager.io/issuer: letsencrypt-prod
+  labels:
+    app: tt-rss
+  name: ttrss-tt-rss
+spec:
+  rules:
+  - host: reader.dittos.pe.kr
+    http:
+      paths:
+      - backend:
+          serviceName: ttrss-tt-rss
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - reader.dittos.pe.kr
+    secretName: ttrss-tls

@@ -1,3 +1,0 @@
-[submodule "external/tt-rss-docker"]
-	path = external/tt-rss-docker
-	url = https://github.com/dittos/tt-rss-docker.git

@@ -1,0 +1,98 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: tt-rss
+  name: ttrss-tt-rss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tt-rss
+  template:
+    metadata:
+      labels:
+        app: tt-rss
+    spec:
+      containers:
+      - name: tt-rss
+        image: gcr.io/ditto-1470749749381/tt-rss-docker:latest
+        imagePullPolicy: Always
+        env:
+        - name: MODE
+          value: app
+        - name: DB_TYPE
+          value: pgsql
+        - name: DB_HOST
+          value: postgres-postgresql.default
+        - name: DB_USER
+          value: postgres
+        - name: DB_NAME
+          value: ttrss
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-password
+              name: postgres-postgresql
+        - name: DB_PORT
+          value: "5432"
+        - name: SELF_URL_PATH
+          value: https://reader.dittos.pe.kr/
+        - name: SINGLE_USER_MODE
+          value: "false"
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 300
+          successThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: tt-rss-data
+
+      - name: tt-rss-updater
+        image: gcr.io/ditto-1470749749381/tt-rss-docker:latest
+        imagePullPolicy: Always
+        env:
+        - name: MODE
+          value: updater
+        - name: DB_TYPE
+          value: pgsql
+        - name: DB_HOST
+          value: postgres-postgresql.default
+        - name: DB_USER
+          value: postgres
+        - name: DB_NAME
+          value: ttrss
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-password
+              name: postgres-postgresql
+        - name: DB_PORT
+          value: "5432"
+        - name: SELF_URL_PATH
+          value: https://reader.dittos.pe.kr/
+        - name: SINGLE_USER_MODE
+          value: "false"
+        volumeMounts:
+        - mountPath: /data
+          name: tt-rss-data
+
+      securityContext:
+        supplementalGroups:
+        - 5000
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: tt-rss-data
+        persistentVolumeClaim:
+          claimName: ttrss-tt-rss
