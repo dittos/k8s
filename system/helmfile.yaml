@@ -1,7 +1,7 @@
 environments:
   default:
     values:
-      - env.yaml
+      - ../env.yaml
 
 repositories:
 - name: jetstack
@@ -13,6 +13,7 @@ releases:
 - name: nginx-ingress
   namespace: nginx-ingress
   chart: stable/nginx-ingress
+  version: 1.37.0
   values:
   - nginx-ingress/values.yaml
 
@@ -24,17 +25,13 @@ releases:
 - name: keel
   namespace: kube-system
   chart: keel-charts/keel
+  version: 0.8.22
   values:
   - keel/values.yaml.gotmpl
 
 - name: postgres
   namespace: default
   chart: stable/postgresql
+  version: 8.6.4
   values:
   - postgres/values.yaml.gotmpl
-
-- name: ttrss
-  namespace: default
-  chart: ./external/tt-rss-docker/helm-charts/tt-rss
-  values:
-  - ttrss/values.yaml.gotmpl

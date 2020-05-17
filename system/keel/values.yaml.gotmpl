@@ -4,7 +4,7 @@
 
 image:
   repository: keelhq/keel
-  tag: 0.15.0-rc1
+  tag: 0.16.0
   pullPolicy: Always
 
 # Enable insecure registries
@@ -21,8 +21,8 @@ helmProvider:
   tillerNamespace: "kube-system"
   # optional Tiller address (if portforwarder tunnel doesn't work),
   # if you are using default configuration, setting it to
-  # 'tiller-deploy.tiller.svc.cluster.local:44134' is usually fine
-  tillerAddress: ''
+  # 'tiller-deploy:44134' is usually fine
+  tillerAddress: 'tiller-deploy:44134'
 
 # Google Container Registry
 # GCP Project ID
@@ -40,6 +40,7 @@ notificationLevel: info
 # https://keel.sh/v1/guide/documentation.html#Polling-with-AWS-ECR
 ecr:
   enabled: false
+  roleArn: ""
   accessKeyId: ""
   secretAccessKey: ""
   region: ""
@@ -72,6 +73,17 @@ hipchat:
 mattermost:
   enabled: false
   endpoint: ""
+
+# Mail notifications
+mail:
+  enabled: false
+  from: ""
+  to: ""
+  smtp:
+    server: ""
+    port: 25
+    user: ""
+    pass: ""
 
 # Basic auth on approvals
 basicauth:
@@ -129,6 +141,12 @@ keel:
 # RBAC manifests management
 rbac:
   enabled: true
+  serviceAccount:
+    # Kubernetes service account name to be used for ClusterRoleBinding and Deployment.
+    # name:
+    # Create a new Kubernetes service account automatically. Set to false if you want to use your own service account.
+    # If rbac.serviceAccount.name is not set, a new name for the service account is generated
+    create: true
 
 # Resources
 resources:
@@ -201,7 +219,7 @@ dockerRegistry:
   name: ""
   key: ""
 
-persistance:
-  enable: false
+persistence:
+  enabled: false
   storageClass: "-"
   size: 1Gi
