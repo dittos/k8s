@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: redirect
+  annotations:
+    certmanager.k8s.io/issuer: "letsencrypt-prod"
+    certmanager.k8s.io/acme-challenge-type: http01
+    nginx.ingress.kubernetes.io/temporal-redirect: "https://blog.sapzil.org/"
+spec:
+  tls:
+    - hosts:
+        - "dittos.pe.kr"
+        - "www.dittos.pe.kr"
+        - "sapzil.org"
+        - "www.sapzil.org"
+      secretName: personal-tls
+  rules:
+    - host: dittos.pe.kr
+    - host: www.dittos.pe.kr
+    - host: sapzil.org
+    - host: www.sapzil.org
