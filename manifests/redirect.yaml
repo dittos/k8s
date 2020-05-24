@@ -4,8 +4,8 @@ kind: Ingress
 metadata:
   name: redirect
   annotations:
-    certmanager.k8s.io/issuer: "letsencrypt-prod"
-    certmanager.k8s.io/acme-challenge-type: http01
+    cert-manager.io/issuer: "letsencrypt-prod"
+    cert-manager.io/acme-challenge-type: http01
     nginx.ingress.kubernetes.io/temporal-redirect: "https://blog.sapzil.org/"
 spec:
   tls:
