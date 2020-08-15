@@ -1,0 +1,13 @@
+{
+  "type": "postgres",
+  "host": "postgres-postgresql.default",
+  "port": 5432,
+  "username": "postgres",
+  "password": "",
+  "database": "riditools",
+  "synchronize": true,
+  "logging": false,
+  "entities": [
+    "lib/entity/**/*.js"
+  ]
+}
