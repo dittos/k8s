@@ -30,3 +30,35 @@ spec:
               secretName: riditools
           - name: temp-cache
             emptyDir: {}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: riditools-cronjob-crawler-new-books
+spec:
+  # minute hour dayOfMonth month dayOfWeek (should be UTC!)
+  schedule: "0 * * * *" # every hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: crawler
+              image: gcr.io/ditto-1470749749381/riditools
+              imagePullPolicy: Always
+              args:
+                - 'crawler'
+                - 'new-books'
+              volumeMounts:
+              - mountPath: /app/ormconfig.json
+                name: secret
+                subPath: ormconfig.json
+              - mountPath: /app/tmp/cache
+                name: temp-cache
+          volumes:
+          - name: secret
+            secret:
+              secretName: riditools
+          - name: temp-cache
+            emptyDir: {}
