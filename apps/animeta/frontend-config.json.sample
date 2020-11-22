@@ -7,5 +7,6 @@
     "daumAPIKey": "",
     "assetBase": "",
     "staticUrl": "",
-    "kakaoApiKey": ""
+    "kakaoApiKey": "",
+    "sessionCookieDomain": ".animeta.net"
 }
