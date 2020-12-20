@@ -4,16 +4,20 @@ environments:
       - ../env.yaml
 
 repositories:
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
 - name: jetstack
   url: https://charts.jetstack.io
 - name: keel-charts
   url: https://charts.keel.sh
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
 
 releases:
 - name: nginx-ingress
   namespace: nginx-ingress
-  chart: stable/nginx-ingress
-  version: 1.37.0
+  chart: nginx-ingress/nginx-ingress
+  version: 3.15.2
   values:
   - nginx-ingress/values.yaml
 
@@ -31,7 +35,7 @@ releases:
 
 - name: postgres
   namespace: default
-  chart: stable/postgresql
+  chart: bitnami/postgresql
   version: 8.6.4
   values:
   - postgres/values.yaml.gotmpl
