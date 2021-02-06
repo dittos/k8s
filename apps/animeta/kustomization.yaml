@@ -8,6 +8,10 @@ secretGenerator:
     files:
       - google-credentials.json
       - backend-config.properties
+
+configMapGenerator:
+  - name: animeta-frontend
+    files:
       - frontend-config.json
 
 resources:

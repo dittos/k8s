@@ -34,9 +34,9 @@ spec:
           initialDelaySeconds: 10
         volumeMounts:
         - mountPath: /app/frontend-dist/config.json
-          name: secret
+          name: config
           subPath: frontend-config.json
       volumes:
-      - name: secret
-        secret:
-          secretName: animeta
+      - name: config
+        configMap:
+          name: animeta-frontend
