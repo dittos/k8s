@@ -1,6 +1,7 @@
 {
     "backend": {
         "baseUrl": "http://animeta-backend:8080",
+        "v4BaseUrl": "http://animeta-backend-ts:8081/api/v4",
         "remote": false
     },
     "sentryDsn": "",

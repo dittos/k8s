@@ -8,6 +8,7 @@ secretGenerator:
     files:
       - google-credentials.json
       - backend-config.properties
+      - backend-ts-ormconfig.json
 
 configMapGenerator:
   - name: animeta-frontend
@@ -17,6 +18,8 @@ configMapGenerator:
 resources:
   - deployment-backend.yaml
   - service-backend.yaml
+  - deployment-backend-ts.yaml
+  - service-backend-ts.yaml
   - deployment-frontend.yaml
   - service-frontend.yaml
   - ingress.yaml

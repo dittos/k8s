@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: animeta-backend-ts
+  labels:
+    app: animeta-backend-ts
+    keel.sh/policy: force
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: animeta-backend-ts
+  template:
+    metadata:
+      labels:
+        app: animeta-backend-ts
+    spec:
+      containers:
+      - name: backend
+        image: gcr.io/ditto-1470749749381/animeta-backend-ts
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+        resources:
+          limits:
+            memory: "512Mi"
+          requests:
+            memory: "256Mi"
+        # readinessProbe:
+        #   httpGet:
+        #     path: /actuator/health
+        #     port: 8080
+        #   initialDelaySeconds: 40
+        volumeMounts:
+        - mountPath: /app/backend-ts/ormconfig.json
+          name: secret
+          subPath: backend-ts-ormconfig.json
+      volumes:
+      - name: secret
+        secret:
+          secretName: animeta
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: NotIn
+                values:
+                - "true"
