@@ -21,6 +21,9 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
+        env:
+        - name: NODE_ENV
+          value: production
         resources:
           limits:
             memory: "512Mi"
