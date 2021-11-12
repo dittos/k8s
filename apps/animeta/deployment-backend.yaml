@@ -29,6 +29,11 @@ spec:
             secretKeyRef:
               name: animeta
               key: 'animeta.security.internal-password'
+        - name: ANIMETA_SECURITY_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: animeta
+              key: 'animeta.security.secret-key'
         resources:
           limits:
             memory: "512Mi"
