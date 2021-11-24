@@ -16,30 +16,67 @@ spec:
     spec:
       containers:
       - name: tt-rss
-        image: gcr.io/ditto-1470749749381/tt-rss-docker:latest
+        image: cthulhoo/ttrss-fpm-pgsql-static:latest
         imagePullPolicy: Always
         env:
-        - name: MODE
-          value: app
-        - name: DB_TYPE
-          value: pgsql
-        - name: DB_HOST
+        - name: TTRSS_DB_HOST
           value: postgres-postgresql.default
-        - name: DB_USER
+        - name: TTRSS_DB_USER
           value: postgres
-        - name: DB_NAME
+        - name: TTRSS_DB_NAME
           value: ttrss
-        - name: DB_PASS
+        - name: TTRSS_DB_PASS
           valueFrom:
             secretKeyRef:
               key: postgresql-password
               name: postgres-postgresql
-        - name: DB_PORT
+        - name: TTRSS_DB_PORT
           value: "5432"
-        - name: SELF_URL_PATH
-          value: https://reader.dittos.pe.kr/
-        - name: SINGLE_USER_MODE
+        - name: TTRSS_SELF_URL_PATH
+          value: https://reader.dittos.pe.kr/tt-rss
+        - name: TTRSS_SINGLE_USER_MODE
           value: "false"
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: tt-rss-data
+        - mountPath: /var/www/html
+          name: app
+
+      - name: tt-rss-updater
+        image: cthulhoo/ttrss-fpm-pgsql-static:latest
+        imagePullPolicy: Always
+        command: ['/opt/tt-rss/updater.sh']
+        env:
+        - name: TTRSS_DB_HOST
+          value: postgres-postgresql.default
+        - name: TTRSS_DB_USER
+          value: postgres
+        - name: TTRSS_DB_NAME
+          value: ttrss
+        - name: TTRSS_DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-password
+              name: postgres-postgresql
+        - name: TTRSS_DB_PORT
+          value: "5432"
+        - name: TTRSS_SELF_URL_PATH
+          value: https://reader.dittos.pe.kr/tt-rss
+        - name: TTRSS_SINGLE_USER_MODE
+          value: "false"
+        volumeMounts:
+        - mountPath: /data
+          name: tt-rss-data
+        - mountPath: /var/www/html
+          name: app
+
+      - name: tt-rss-frontend
+        image: cthulhoo/ttrss-web-nginx:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: app
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -51,42 +88,9 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
         ports:
-        - containerPort: 8080
+        - containerPort: 80
           name: http
           protocol: TCP
-        resources: {}
-        volumeMounts:
-        - mountPath: /data
-          name: tt-rss-data
-
-      - name: tt-rss-updater
-        image: gcr.io/ditto-1470749749381/tt-rss-docker:latest
-        imagePullPolicy: Always
-        env:
-        - name: MODE
-          value: updater
-        - name: DB_TYPE
-          value: pgsql
-        - name: DB_HOST
-          value: postgres-postgresql.default
-        - name: DB_USER
-          value: postgres
-        - name: DB_NAME
-          value: ttrss
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              key: postgresql-password
-              name: postgres-postgresql
-        - name: DB_PORT
-          value: "5432"
-        - name: SELF_URL_PATH
-          value: https://reader.dittos.pe.kr/
-        - name: SINGLE_USER_MODE
-          value: "false"
-        volumeMounts:
-        - mountPath: /data
-          name: tt-rss-data
 
       securityContext:
         supplementalGroups:
@@ -96,3 +100,9 @@ spec:
       - name: tt-rss-data
         persistentVolumeClaim:
           claimName: ttrss-tt-rss
+      - name: app
+        emptyDir: {}
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "app"
