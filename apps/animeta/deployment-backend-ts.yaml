@@ -29,16 +29,18 @@ spec:
             secretKeyRef:
               name: animeta
               key: 'animeta.security.secret-key'
+        - name: SENTRY_DSN
+          value: "https://deb70af1222e49a98b699584f9819f79@o120476.ingest.sentry.io/6187990"
         resources:
           limits:
             memory: "512Mi"
           requests:
             memory: "256Mi"
-        # readinessProbe:
-        #   httpGet:
-        #     path: /actuator/health
-        #     port: 8080
-        #   initialDelaySeconds: 40
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 10
         volumeMounts:
         - mountPath: /app/backend-ts/ormconfig.json
           name: secret
