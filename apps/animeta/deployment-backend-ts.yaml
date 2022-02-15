@@ -24,13 +24,11 @@ spec:
         env:
         - name: NODE_ENV
           value: production
-        - name: ANIMETA_SECURITY_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: animeta
-              key: 'animeta.security.secret-key'
         - name: SENTRY_DSN
           value: "https://deb70af1222e49a98b699584f9819f79@o120476.ingest.sentry.io/6187990"
+        envFrom:
+        - secretRef:
+            name: animeta-backend-ts
         resources:
           limits:
             memory: "512Mi"
@@ -48,7 +46,7 @@ spec:
       volumes:
       - name: secret
         secret:
-          secretName: animeta
+          secretName: animeta-backend-ts
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

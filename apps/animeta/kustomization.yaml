@@ -8,6 +8,10 @@ secretGenerator:
     files:
       - google-credentials.json
       - backend-config.properties
+  - name: animeta-backend-ts
+    type: Opaque
+    env: backend-ts-secrets.env
+    files:
       - backend-ts-ormconfig.json
 
 configMapGenerator:

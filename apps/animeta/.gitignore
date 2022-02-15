@@ -2,4 +2,5 @@ google-credentials.json
 secrets.env
 backend-config.properties
 backend-ts-ormconfig.json
+backend-ts-secrets.env
 frontend-config.json
