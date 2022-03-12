@@ -13,6 +13,7 @@ secretGenerator:
     env: backend-ts-secrets.env
     files:
       - backend-ts-ormconfig.json
+      - google-credentials.json
 
 configMapGenerator:
   - name: animeta-frontend
