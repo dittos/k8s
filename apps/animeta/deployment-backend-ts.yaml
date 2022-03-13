@@ -21,6 +21,7 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
+        - containerPort: 8082
         env:
         - name: NODE_ENV
           value: production
