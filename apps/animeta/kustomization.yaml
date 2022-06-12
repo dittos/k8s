@@ -21,8 +21,6 @@ configMapGenerator:
       - frontend-config.json
 
 resources:
-  - deployment-backend.yaml
-  - service-backend.yaml
   - deployment-backend-ts.yaml
   - service-backend-ts.yaml
   - deployment-frontend.yaml
