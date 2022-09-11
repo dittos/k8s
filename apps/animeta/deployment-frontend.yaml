@@ -24,6 +24,8 @@ spec:
         env:
         - name: PORT
           value: "3000"
+        - name: ANIMETA_CONFIG_PATH
+          value: /app/conf/frontend-config.json
         resources:
           limits:
             memory: "128Mi"
@@ -33,9 +35,8 @@ spec:
             port: 3000
           initialDelaySeconds: 10
         volumeMounts:
-        - mountPath: /app/frontend-dist/config.json
+        - mountPath: /app/conf
           name: config
-          subPath: frontend-config.json
       volumes:
       - name: config
         configMap:
