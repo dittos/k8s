@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: animeta-lambda
+spec:
+  type: ExternalName
+  externalName: 8981kd8wv4.execute-api.ap-northeast-2.amazonaws.com

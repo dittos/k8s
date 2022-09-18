@@ -4,6 +4,8 @@ metadata:
   annotations:
     cert-manager.io/acme-challenge-type: http01
     cert-manager.io/issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: https
+    nginx.ingress.kubernetes.io/upstream-vhost: animeta.net
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
   name: animeta
 spec:
@@ -12,8 +14,8 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: animeta-frontend
-          servicePort: 3000
+          serviceName: animeta-lambda
+          servicePort: 443
         path: /
   tls:
   - hosts:
