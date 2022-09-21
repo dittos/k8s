@@ -65,6 +65,8 @@ spec:
           value: https://reader.dittos.pe.kr/tt-rss
         - name: TTRSS_SINGLE_USER_MODE
           value: "false"
+        - name: TTRSS_DAEMON_SLEEP_INTERVAL
+          value: "600"
         volumeMounts:
         - mountPath: /data
           name: tt-rss-data
