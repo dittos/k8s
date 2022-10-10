@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: animeta-frontend
+  labels:
+    app: animeta-frontend
+    keel.sh/policy: force
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: animeta-frontend
+  template:
+    metadata:
+      labels:
+        app: animeta-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: gcr.io/ditto-1470749749381/animeta-frontend
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: ANIMETA_CONFIG_PATH
+          value: /app/conf/frontend-config.json
+        resources:
+          limits:
+            memory: "128Mi"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+        volumeMounts:
+        - mountPath: /app/conf
+          name: config
+      volumes:
+      - name: config
+        configMap:
+          name: animeta-frontend
