@@ -1,7 +1,13 @@
 postgresqlPassword: "{{ .Environment.Values.postgres.password }}"
-resources:
-  requests:
-    memory: 256Mi
-    cpu: 250m
-  limits:
-    cpu: 1
+
+auth:
+  postgresPassword: "{{ .Environment.Values.postgres.password }}"
+  password: "{{ .Environment.Values.postgres.password }}"
+
+primary:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      cpu: 1

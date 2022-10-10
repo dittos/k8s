@@ -36,6 +36,6 @@ releases:
 - name: postgres
   namespace: default
   chart: bitnami/postgresql
-  version: 8.6.4
+  version: 10.16.2
   values:
   - postgres/values.yaml.gotmpl
