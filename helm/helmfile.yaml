@@ -12,6 +12,8 @@ repositories:
   url: https://charts.keel.sh
 - name: bitnami
   url: https://charts.bitnami.com/bitnami
+- name: bitnami-full-index
+  url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
 releases:
 - name: nginx-ingress
@@ -39,3 +41,9 @@ releases:
   version: 10.16.2
   values:
   - postgres/values.yaml.gotmpl
+
+- name: mastodon
+  namespace: default
+  chart: ./mastodon
+  values:
+  - mastodon/values.yaml.gotmpl
