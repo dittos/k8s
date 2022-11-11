@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -8,14 +8,18 @@ metadata:
     app: tt-rss
   name: ttrss-tt-rss
 spec:
+  ingressClassName: nginx
   rules:
   - host: reader.dittos.pe.kr
     http:
       paths:
       - backend:
-          serviceName: ttrss-tt-rss
-          servicePort: http
+          service:
+            name: ttrss-tt-rss
+            port:
+              name: http
         path: /
+        pathType: Prefix
   tls:
   - hosts:
     - reader.dittos.pe.kr

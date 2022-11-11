@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: redirect
@@ -8,6 +8,7 @@ metadata:
     cert-manager.io/acme-challenge-type: http01
     nginx.ingress.kubernetes.io/temporal-redirect: "https://blog.sapzil.org/"
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - "dittos.pe.kr"
