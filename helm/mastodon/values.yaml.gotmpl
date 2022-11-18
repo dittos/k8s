@@ -103,6 +103,11 @@ mastodon:
   web:
     port: 3000
 
+  metrics:
+    statsd:
+      # Enable statsd publishing via STATSD_ADDR environment variable
+      address: ""
+
 ingress:
   enabled: true
   annotations:
@@ -152,6 +157,7 @@ postgresql:
   # must match those of that external postgres instance
   enabled: false
   postgresqlHostname: postgres-postgresql.default
+  # postgresqlPort: 5432
   auth:
     database: mastodon
     username: postgres
