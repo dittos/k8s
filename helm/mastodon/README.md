@@ -7,7 +7,7 @@ Kubernetes cluster.  The basic usage is:
 1. `helm dep update`
 1. `helm install --namespace mastodon --create-namespace my-mastodon ./ -f path/to/additional/values.yaml`
 
-This chart has been tested on Helm 3.0.1 and above.
+This chart is tested with k8s 1.21+ and helm 3.6.0+.
 
 # Configuration
 
@@ -18,6 +18,23 @@ The variables that _must_ be configured are:
   across upgrades.
 
 - SMTP settings for your mailer in the `mastodon.smtp` group.
+
+If your PersistentVolumeClaim is `ReadWriteOnce` and you're unable to use a S3-compatible service or
+run a self-hosted compatible service like [Minio](https://min.io/docs/minio/kubernetes/upstream/index.html)
+then you need to set the pod affinity so the web and sidekiq pods are scheduled to the same node.
+
+Example configuration:
+```yaml
+podAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+          - key: app.kubernetes.io/part-of
+            operator: In
+            values:
+              - rails
+      topologyKey: kubernetes.io/hostname
+```
 
 # Administration
 
