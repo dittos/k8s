@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale-proxy-grafana
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: tailscale-proxy-grafana
+  template:
+    metadata:
+      labels:
+        app: tailscale-proxy-grafana
+    spec:
+      serviceAccountName: "tailscale"
+      initContainers:
+        # In order to run as a proxy we need to enable IP Forwarding inside
+        # the container. The `net.ipv4.ip_forward` sysctl is not allowlisted
+        # in Kubelet by default.
+      - name: sysctler
+        image: busybox
+        securityContext:
+          privileged: true
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1
+        resources:
+          requests:
+            cpu: 1m
+            memory: 1Mi
+      containers:
+      - name: tailscale
+        imagePullPolicy: Always
+        image: "ghcr.io/tailscale/tailscale:latest"
+        env:
+        # Store the state in a k8s secret
+        - name: TS_KUBE_SECRET
+          value: "tailscale-auth"
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_AUTH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth
+              key: TS_AUTH_KEY
+              optional: true
+        - name: TS_DEST_IP
+          # kubectl get svc -n monitoring grafana -o=jsonpath='{.spec.clusterIP}'
+          value: "10.43.187.63"
+        - name: TS_AUTH_ONCE
+          value: "true"
+        - name: TS_EXTRA_ARGS
+          value: "--hostname=grafana"
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
