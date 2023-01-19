@@ -14,8 +14,26 @@ repositories:
   url: https://charts.bitnami.com/bitnami
 - name: bitnami-full-index
   url: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+- name: vm
+  url: https://victoriametrics.github.io/helm-charts/
+- name: grafana
+  url: https://grafana.github.io/helm-charts
 
 releases:
+- name: vmsingle
+  namespace: monitoring
+  chart: vm/victoria-metrics-single
+  version: 0.8.50
+  values:
+  - vmsingle/values.yaml
+
+- name: grafana
+  namespace: monitoring
+  chart: grafana/grafana
+  version: 6.50.0
+  values:
+  - grafana/values.yaml
+
 - name: nginx-ingress
   namespace: nginx-ingress
   chart: ingress-nginx/ingress-nginx
