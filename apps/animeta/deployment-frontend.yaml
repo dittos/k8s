@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: gcr.io/ditto-1470749749381/animeta-frontend
+        image: ghcr.io/dittos/animeta-frontend
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

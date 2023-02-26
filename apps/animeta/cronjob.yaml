@@ -13,7 +13,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: call
-              image: gcr.io/ditto-1470749749381/animeta-backend-ts
+              image: ghcr.io/dittos/animeta-backend-ts
               command: ['node', 'dist/backend-ts/src2/commands/indexer.js']
               env:
               - name: NODE_ENV

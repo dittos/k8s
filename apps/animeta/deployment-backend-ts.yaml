@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: gcr.io/ditto-1470749749381/animeta-backend-ts
+        image: ghcr.io/dittos/animeta-backend-ts
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
