@@ -50,13 +50,6 @@ releases:
     - name: installCRDs
       value: "true"
 
-- name: keel
-  namespace: kube-system
-  chart: keel-charts/keel
-  version: 0.8.22
-  values:
-  - keel/values.yaml.gotmpl
-
 - name: postgres
   namespace: default
   chart: bitnami-full-index/postgresql
