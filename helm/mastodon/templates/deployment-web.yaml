@@ -86,6 +86,10 @@ spec:
                   name: {{ .Values.mastodon.s3.existingSecret }}
                   key: AWS_ACCESS_KEY_ID
             {{- end }}
+            - name: "WEB_CONCURRENCY"
+              value: "1"
+            - name: "MIN_THREADS"
+              value: "1"
           {{- if (not .Values.mastodon.s3.enabled) }}
           volumeMounts:
             - name: assets
