@@ -98,7 +98,7 @@ mastodon:
     workers:
     - name: all-queues
       # -- Number of threads / parallel sidekiq jobs that are executed per Pod
-      concurrency: 25
+      concurrency: 2
       # -- Number of Pod replicas deployed by the Deployment
       replicas: 1
       # -- Resources for this specific deployment to allow optimised scaling, overwrites .Values.mastodon.sidekiq.resources
@@ -281,6 +281,11 @@ redis:
   # with a key of redis-password set to the password you want
   # auth:
     # existingSecret: ""
+  master:
+    readinessProbe:
+      enabled: false
+    livenessProbe:
+      enabled: false
 
 # @ignored
 service:
