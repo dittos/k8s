@@ -5,7 +5,7 @@ metadata:
   name: animeta-cronjob-build-index
 spec:
   # minute hour dayOfMonth month dayOfWeek (should be UTC!)
-  schedule: "0 * * * *" # every hour
+  schedule: "37 * * * *" # every hour
   jobTemplate:
     spec:
       template:

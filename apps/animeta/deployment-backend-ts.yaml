@@ -43,7 +43,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 8081
+            port: 8082
           initialDelaySeconds: 10
         volumeMounts:
         - mountPath: /app/backend-ts/ormconfig.json
