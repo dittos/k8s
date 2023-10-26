@@ -14,7 +14,7 @@ spec:
           containers:
             - name: call
               image: ghcr.io/dittos/animeta-backend-ts
-              command: ['node', 'dist/backend-ts/src2/commands/indexer.js']
+              command: ['node', 'dist/commands/indexer.js']
               env:
               - name: NODE_ENV
                 value: production
