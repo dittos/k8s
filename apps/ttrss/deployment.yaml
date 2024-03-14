@@ -76,6 +76,11 @@ spec:
       - name: tt-rss-frontend
         image: cthulhoo/ttrss-web-nginx:latest
         imagePullPolicy: Always
+        env:
+        - name: APP_UPSTREAM
+          value: localhost
+        - name: RESOLVER
+          value: kube-dns.kube-system.svc.cluster.local
         volumeMounts:
         - mountPath: /var/www/html
           name: app
