@@ -62,3 +62,9 @@ releases:
   chart: ./mastodon
   values:
   - mastodon/values.yaml.gotmpl
+
+- name: bluesky-pds
+  namespace: default
+  chart: ./bluesky-pds
+  values:
+  - bluesky-pds/values.yaml.gotmpl
