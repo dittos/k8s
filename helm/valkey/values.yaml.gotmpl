@@ -1,0 +1,10 @@
+architecture: standalone
+
+auth:
+  password: "{{ .Environment.Values.commonSecret }}"
+
+primary:
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false

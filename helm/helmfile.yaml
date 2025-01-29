@@ -57,6 +57,13 @@ releases:
   values:
   - postgres/values.yaml.gotmpl
 
+- name: valkey
+  namespace: default
+  chart: bitnami/valkey
+  version: 2.2.3
+  values:
+  - valkey/values.yaml.gotmpl
+
 - name: mastodon
   namespace: default
   chart: ./mastodon
