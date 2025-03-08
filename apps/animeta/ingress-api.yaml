@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/acme-challenge-type: http01
+    cert-manager.io/issuer: letsencrypt-prod
+  name: animeta-api
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.animeta.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: animeta-backend-ts
+            port:
+              number: 8082
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - api.animeta.net
+    secretName: animeta-api-tls

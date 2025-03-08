@@ -26,6 +26,7 @@ resources:
   - deployment-frontend.yaml
   - service-frontend.yaml
   - ingress.yaml
+  - ingress-api.yaml
   - cronjob.yaml
 
 # namespace to deploy all Resources to
