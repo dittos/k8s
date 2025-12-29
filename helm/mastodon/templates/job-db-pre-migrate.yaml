@@ -1,5 +1,5 @@
 {{- if .Values.mastodon.hooks.dbMigrate.enabled }}
-{{- include "mastodon.dbMigrateJob" (merge (dict "preDeploy" false ) .) }}
+{{- include "mastodon.dbMigrateJob" (merge (dict "preDeploy" true ) .) }}
       {{- with coalesce .Values.mastodon.hooks.dbMigrate.nodeSelector .Values.nodeSelector }}
       nodeSelector:
         {{- . | toYaml | nindent 8 }}

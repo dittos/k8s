@@ -1,18 +1,19 @@
-{{- if .Values.mastodon.createAdmin.enabled -}}
+{{- if and .Values.mastodon.hooks.deploySearch.enabled .Values.elasticsearch.enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "mastodon.fullname" . }}-create-admin
+  name: {{ include "mastodon.fullname" . }}-deploy-search
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
-    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-weight": "-2"
 spec:
+  suspend: false
   template:
     metadata:
-      name: {{ include "mastodon.fullname" . }}-create-admin
+      name: {{ include "mastodon.fullname" . }}-deploy-search
       {{- with .Values.jobAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -22,7 +23,7 @@ spec:
       {{- if (not .Values.mastodon.s3.enabled) }}
       # ensure we run on the same node as the other rails components; only
       # required when using PVCs that are ReadWriteOnce
-      {{- if or (eq "ReadWriteOnce" .Values.mastodon.persistence.assets.accessMode) (eq "ReadWriteOnce" .Values.mastodon.persistence.system.accessMode) }}
+      {{- if or (eq "ReadWriteOnce" .Values.mastodon.persistence.assets.accessMode) (eq "ReadWriteOnce" .Values.persistence.system.accessMode) }}
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -37,30 +38,48 @@ spec:
       volumes:
         - name: assets
           persistentVolumeClaim:
-            claimName: {{ template "mastodon.pvc.assets" . }}
+            claimName: {{ template "mastodon.fullname" . }}-assets
         - name: system
           persistentVolumeClaim:
-            claimName: {{ template "mastodon.pvc.system" . }}
+            claimName: {{ template "mastodon.fullname" . }}-system
       {{- end }}
       containers:
-        - name: {{ include "mastodon.fullname" . }}-create-admin
+        - name: {{ include "mastodon.fullname" . }}-deploy-search
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.mastodon.hooks.deploySearch }}
+          {{- with .resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           command:
             - bin/tootctl
-            - accounts
-            - create
-            - {{ .Values.mastodon.createAdmin.username }}
-            - --email
-            - {{ .Values.mastodon.createAdmin.email }}
-            - --confirmed
-            - --role
-            - Owner
+            - search
+            - deploy
+            {{- with .concurrency }}
+            - '--concurrency'
+            - {{ . | quote }}
+            {{- end }}
+            {{- if .resetChewy }}
+            - '--reset-chewy'
+            {{- end }}
+            {{- with .batchSize }}
+            - '--batch-size'
+            - {{ . | quote }}
+            {{- end }}
+            {{- with .only }}
+              {{- if not (has . (list "instances" "accounts" "tags" "statuses" "public_statuses")) -}}
+                {{ fail "mastodon.hooks.deploySearch.only: Value must be one of the following words: instances, accounts, tags, statuses, public_statuses"}}
+              {{- end }}
+            - '--only'
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
             - secretRef:
-                name: {{ template "mastodon.secretName" . }}
+                name: {{ template "mastodon.secretName" $ }}
           env:
             - name: "DB_PASS"
               valueFrom:
@@ -72,20 +91,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: redis-password
-            {{- if and .Values.redis.sidekiq.enabled .Values.redis.sidekiq.auth.existingSecret }}
-            - name: "SIDEKIQ_REDIS_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mastodon.redis.sidekiq.secretName" . }}
-                  key: redis-password
-            {{- end }}
-            {{- if and .Values.redis.cache.enabled .Values.redis.cache.auth.existingSecret }}
-            - name: "CACHE_REDIS_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mastodon.redis.cache.secretName" . }}
-                  key: redis-password
-            {{- end }}
             - name: "PORT"
               value: {{ .Values.mastodon.web.port | quote }}
           {{- if (not .Values.mastodon.s3.enabled) }}
@@ -95,8 +100,4 @@ spec:
             - name: system
               mountPath: /opt/mastodon/public/system
           {{- end }}
-      {{- with coalesce .Values.mastodon.createAdmin.nodeSelector .Values.nodeSelector }}
-      nodeSelector:
-        {{- . | toYaml | nindent 8 }}
-      {{- end }}
 {{- end }}
