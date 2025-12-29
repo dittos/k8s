@@ -28,7 +28,7 @@ spec:
         - name: TTRSS_DB_PASS
           valueFrom:
             secretKeyRef:
-              key: postgresql-password
+              key: postgres-password
               name: postgres-postgresql
         - name: TTRSS_DB_PORT
           value: "5432"
@@ -57,7 +57,7 @@ spec:
         - name: TTRSS_DB_PASS
           valueFrom:
             secretKeyRef:
-              key: postgresql-password
+              key: postgres-password
               name: postgres-postgresql
         - name: TTRSS_DB_PORT
           value: "5432"
