@@ -11,6 +11,12 @@ image:
   pullPolicy: IfNotPresent
 
 mastodon:
+  logLevel:
+    # Set log level for the web and Sidekiq processes.
+    rails: info
+    # Set log level for the streaming process.
+    streaming: info
+
   # Labels added to every Mastodon-related object
   labels: {}
   # Labes added to every deployed mastodon pod
@@ -110,8 +116,12 @@ mastodon:
       # Node(s) on which we will deploy this job
       nodeSelector: {}
 
+  # Sets the default locale for this server.
+  # NOTICE: This will force this locale on every user who is not logged in, and
+  # the instance will no longer do any local detection for clients.
   # -- available locales: https://github.com/mastodon/mastodon/blob/main/config/application.rb#L71
-  locale: en
+  locale:
+
   local_domain: mastodon.local
   # -- Use of WEB_DOMAIN requires careful consideration: https://docs.joinmastodon.org/admin/config/#federation
   # You must redirect the path LOCAL_DOMAIN/.well-known/ to WEB_DOMAIN/.well-known/ as described
@@ -135,6 +145,7 @@ mastodon:
       # scalability, since it requires the Rails and Sidekiq pods to run on the
       # same node.
       accessMode: ReadWriteOnce
+      keepAfterDelete: true
       resources:
         requests:
           storage: 10Gi
@@ -142,6 +153,7 @@ mastodon:
       existingClaim:
     system:
       accessMode: ReadWriteOnce
+      keepAfterDelete: true
       resources:
         requests:
           storage: 100Gi
@@ -156,6 +168,7 @@ mastodon:
     existingSecret: ""
     bucket: ""
     endpoint: ""
+    protocol: https
     hostname: ""
     region: ""
     permission: ""
@@ -287,6 +300,7 @@ mastodon:
           - mailers,2
           - pull
           - scheduler # Make sure the scheduler queue only exists once and with a worker that has 1 replica.
+          - fasp
         image:
           repository:
           tag:
@@ -331,6 +345,29 @@ mastodon:
     # -- Instead of defining login/password above, you can specify the name of an existing secret here. Login and
     # password must be located in keys named `login` and `password` respectively.
     existingSecret:
+
+    # Configuration for bulk/broadcast messages.
+    # Some transactional email providers require customers to use a separate set
+    # of SMTP credentials to send emails that are not transactional in nature.
+    # For more information, refer to the docs:
+    # https://docs.joinmastodon.org/admin/config/#optional-bulk-email-settings
+    bulk:
+      enabled: false
+      auth_method: plain
+      ca_file: /etc/ssl/certs/ca-certificates.crt
+      domain:
+      enable_starttls: "auto"
+      from_address: notifications@example.com
+      openssl_verify_mode: peer
+      port: 587
+      server: smtp.mailgun.org
+      tls:
+      login:
+      password:
+      # -- Instead of defining login/password above, you can specify the name of an existing secret here. Login and
+      # password must be located in keys named `login` and `password` respectively.
+      existingSecret:
+
   streaming:
     image:
       # streaming image split in Mastodon v4.3.0
@@ -487,6 +524,8 @@ mastodon:
       existingSecret:
 
   metrics:
+
+    # NOTE: This feature was dropped in v4.3.0, and will not work for any versions beyond this.
     statsd:
       # -- Enable statsd publishing via STATSD_ADDR environment variable
       address: ""
@@ -496,7 +535,7 @@ mastodon:
         enabled: false
         port: 9102
 
-    # Settings for Prometheus metrics. NOTE: Only available in Mastodon v4.4.
+    # Settings for Prometheus metrics.
     # For more information, see:
     # https://docs.joinmastodon.org/admin/config/#prometheus
     prometheus:
@@ -593,8 +632,8 @@ elasticsearch:
   # RAILS_ENV=production bundle exec rake chewy:sync
   # (https://docs.joinmastodon.org/admin/optional/elasticsearch/)
   enabled: true
-  # @ignored
   image:
+    repository: bitnamilegacy/elasticsearch
     tag: 7
 
   # If you are using an external ES cluster, use `enabled: false` and set the hostname, port,
@@ -621,6 +660,15 @@ elasticsearch:
   metrics:
     nodeSelector: {}
 
+  caSecret: {}
+  #  # caSecret.name is the name of the secret containing the CA certificate.
+  #  name:
+  #  # caSecret.key is the key in the secret containing the CA certificate.
+  #  key: ca.crt
+
+  # elasticsearchIndexPrefix specifies the prefix for Elasticsearch indices used by this Mastodon server
+  # indexPrefix: ""
+
 # Configuration for PostgreSQL.
 # When enabled, the bitnami helm chart is used for PostgreSQL deployment, and
 # all values here correspond to their values file. Please see the bitnami chart
@@ -634,6 +682,8 @@ postgresql:
   # Please note that certain features do not work when enabling the included
   # database, namely automatic schema creation when the app is first installed.
   enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
   # postgresqlHostname: preexisting-postgresql
   # postgresqlPort: 5432
 
@@ -695,6 +745,9 @@ redis:
   # disable if you want to use an existing redis instance; in which case the
   # values below must match those of that external redis instance
   enabled: true
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/redis
   hostname: ""
   port: 6379
   auth:
@@ -880,6 +933,9 @@ podAnnotations: {}
 # If set to true, an annotation with the current chart release number will be added to all mastodon pods. This will
 # cause all pods to be recreated every `helm upgrade` regardless of whether their config or spec changes.
 revisionPodAnnotation: true
+
+# The labels set with jobLabels will be added to all mastodon job pods
+jobLabels: {}
 
 # The annotations set with jobAnnotations will be added to all mastodon job pods
 jobAnnotations: {}

@@ -1,3 +1,94 @@
+# 6.6.3
+
+- Update the mastodon version to v4.5.3
+
+# 6.6.2
+
+- Update the mastodon version to v4.5.2
+
+# 6.6.1
+
+- Update the mastodon version to v4.5.1
+
+# 6.6.0
+
+- Update the mastodon version to v4.5.0. Please refer to the [release notes](https://github.com/mastodon/mastodon/releases/tag/v4.5.0) for important changes.
+
+# 6.5.8
+
+- Update the mastodon version to v4.4.8
+
+# 6.5.7
+
+- Updated all dependent chart images to bitnami legacy repositories.
+- Updated chart test jobs.
+- Added additional configuration options:
+```yaml
+mastodon:
+  s3:
+    protocol: https
+...
+elasticsearch:
+  caSecret:
+  indexPrefix:
+...
+jobLabels:
+```
+
+# 6.5.6
+
+- Update the mastodon version to v4.4.7
+
+# 6.5.5
+
+- Update the mastodon version to v4.4.6
+
+# 6.5.4
+
+- Update the mastodon version to v4.4.5
+
+# 6.5.3
+
+- Update the mastodon version to v4.4.4
+
+# 6.5.2
+
+- Update the Mastodon version to v4.4.3
+
+# 6.5.1
+
+- Updated the Mastodon version to v4.4.2
+
+# 6.5.0
+
+Updated the Mastodon version to v4.4.1. Please read the [4.4.0 release notes](https://github.com/mastodon/mastodon/releases/tag/v4.4.0) before updating from a version < 4.4. In particular:
+- Redis & Postgres minimum versions have been bumped to 6.2 and 13 respectively
+- Redis namespace support has been dropped
+- No-downtime updates from versions before 4.3.0 are not supported
+- Elasticsearch mappings need to be updated manually via `tootctl` after deploying this new version
+- The new experimental Fediverse Auxiliary Service (`fasp`) Sidekiq queue needs to be added to the list of processed queues if you changed the default Sidekiq values
+
+# 6.4.0
+
+- Added configuration for [bulk SMTP](https://docs.joinmastodon.org/admin/config/#optional-bulk-email-settings):
+```yaml
+mastodon:
+  smtp:
+    bulk:
+```
+
+# 6.3.4
+
+- Updated the Mastodon version to v4.3.9
+
+# 6.3.3
+
+- Updated the Mastodon version to v4.3.8
+
+# 6.3.2
+
+- No longer sets `DEFAULT_LOCALE` to `en` by default; leaves this value unset.
+
 # 6.3.1
 
 - Removed DB_POOL from the ConfigMap as we should never have to override this.
