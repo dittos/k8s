@@ -30,6 +30,8 @@ spec:
           value: /app/secrets/google-credentials.json
         - name: ANIMETA_MEDIA_STORAGE_URL
           value: "gs://animeta-static/media/"
+        - name: ANIMETA_MEDIA_PUBLIC_BASE_URL
+          value: "/_static/media/"
         - name: ANIMETA_BACKUP_STORAGE_URL
           value: "gs://animeta-user-backup/"
         envFrom:

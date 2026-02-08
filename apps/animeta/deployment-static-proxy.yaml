@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: animeta-static-proxy
+  labels:
+    app: animeta-static-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: animeta-static-proxy
+  template:
+    metadata:
+      labels:
+        app: animeta-static-proxy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27-alpine
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+        - name: cache
+          mountPath: /var/cache/nginx
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: animeta-static-proxy-nginx
+      - name: cache
+        emptyDir:
+          sizeLimit: 2Gi

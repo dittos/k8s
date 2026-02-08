@@ -14,6 +14,13 @@ spec:
       paths:
       - backend:
           service:
+            name: animeta-static-proxy
+            port:
+              number: 80
+        path: /_static
+        pathType: Prefix
+      - backend:
+          service:
             name: animeta-frontend
             port:
               number: 3000

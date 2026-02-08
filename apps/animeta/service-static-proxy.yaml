@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: animeta-static-proxy
+spec:
+  selector:
+    app: animeta-static-proxy
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

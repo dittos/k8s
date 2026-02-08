@@ -19,12 +19,17 @@ configMapGenerator:
   - name: animeta-frontend
     files:
       - frontend-config.json
+  - name: animeta-static-proxy-nginx
+    files:
+      - nginx.conf=static-proxy-nginx.conf
 
 resources:
   - deployment-backend-ts.yaml
   - service-backend-ts.yaml
   - deployment-frontend.yaml
   - service-frontend.yaml
+  - deployment-static-proxy.yaml
+  - service-static-proxy.yaml
   - ingress.yaml
   - ingress-api.yaml
   - cronjob.yaml
